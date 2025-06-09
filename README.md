@@ -180,73 +180,31 @@ The instructions and code above all assume the primers and indexes used are the 
 1. Update config/indexfordemux.txt
 This file contains the indexes used for demultiplexing round 1 indexes. As a reminder, the indexes have variable lengths or ‘phases’ as shown in the table below:
 
-phase
-variable FP
-variable RP
-0
- 
-ATGGACT
-1
-T
-GCTAGC
-2
-GG
-TGACT
-3
-ACT
-CGGT
-4
-TAAC
-GTA
-5
-CAGTC
-AA
-6
-ATCGAT
-C
-7
-GCAAGTC
+| phase | variable FP | variable RP |
+| --- | --- | --- |
+| 0 |  |ATGGACT |
+| 1 | T | GCTAGC |
+| 2 | GG  | TGACT |
+| 3 | ACT | CGGT |
+| 4 | TAAC | GTA |
+| 5 | CAGTC | AA |
+| 6 | ATCGAT | C|
+| 7 | GCAAGTC  | |
  
 
 
 However, during the demultiplexing, we treat the reads as if they have 7 base pair indexes on both ends. Any of the 7 base pairs that are not filled in with the index will be the spacer/gene-specific primer sequence. The table below shows the default indexes, with the actual index base pairs underlined, the spacer base pairs highlighted in blue, and the gene-specific primer regions in yellow. (The ‘bc’ or barcode column is simply the concatenated strings of read1index and read2index). The index, spacer, and gene specific regions will need to be edited according to the changes in primers. 
 
-phase
-read1index 
-read2index 
-bc
-0
-CAGTAGA
-ATGGACT
-CAGTAGAATGGACT
-1
-TCAGTAG
-GCTAGCA
-TCAGTAGGCTAGCA
-2
-GGCAGTA
-TGACTAT
-GGCAGTATGACTAT
-3
-ACTCAGT
-CGGTATC
-ACTCAGTCGGTATC
-4
-TAACCAG
-GTAATCC
-TAACCAGGTAATCC
-5
-CAGTCCA
-AAATCCT
-CAGTCCAAAATCCT
-6
-ATCGATC
-CATCCTA
-ATCGATCCATCCTA
-7
-GCAAGTC
-ATCCTAC
-GCAAGTCATCCTAC
+| phase | read1index | read2index | bc |
+| --- | --- | --- | --- |
+| 0 | CAGTAGA | ATGGACT | CAGTAGAATGGACT | 
+| 1 | TCAGTAG | GCTAGCA | TCAGTAGGCTAGCA | 
+| 2 | GGCAGTA | TGACTAT | GGCAGTATGACTAT | 
+| 3 | ACTCAGT | CGGTATC | ACTCAGTCGGTATC | 
+| 4 | TAACCAG | GTAATCC | TAACCAGGTAATCC | 
+| 5 | CAGTCCA | AAATCCT | CAGTCCAAAATCCT | 
+| 6 | ATCGATC | CATCCTA | ATCGATCCATCCTA | 
+| 7 | GCAAGTC | ATCCTAC | GCAAGTCATCCTAC | 
 
 
 __Note:__ We highly recommend avoiding any mixed base characters such as ‘W’ or ‘N’ in the first three positions of your gene specific primer! If such bases are included, you will need to make several version of the indexfordemux.txt table, one for each potential base (e.g., for a ‘W’, one version should have an ‘A’ and one should have a ‘T’). The demultiplexing should be run twice, once for each indexfordemux.txt file. 
