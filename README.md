@@ -94,7 +94,7 @@ The general file structure created by the Docker/Singularity images is shown bel
 Test files are included within config (‘test_config.yaml’, ‘test_fastq.txt’, ‘test_samplesheet.txt’), and the official config.yaml file, fastq file list, and samplesheets should also be included in the config folder. Here the fastq file list and samplesheets are named ‘samplesheet.tsv’ and ‘fastqlist.txt’, but the names can vary. The indexfordemux.txt file, which includes the unique in-line indices. 
  
 The script for initiating the Snakemake run using Slurm and the Snakefile encoding the analysis are found in the top 16s-demux file. 
-
+ ![image](./images/16s-demux_fileStructure.png)
 
 1. Fastq data:
 Names: Sample names should not include any spaces or underscores (hyphens are fine). If they do, they should be renamed before demultiplexing. 
@@ -158,13 +158,15 @@ The image will be created locally with the name and version provided following -
 ### Singularity/Apptainer:
 To build a singularity/Apptainer image, ensure the necessary files are arranged properly and build from the Def file:
 
-1. All necessary files are included in ‘demux_only.zip’ in **location**. Download and unzip the file. The following file structure should be created: (ADD IMAGE) ‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
-2. __Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources. Move to the directory containing the def file (16s-demux.def) and run the following:
+1. All necessary files are included in ‘demux_only.zip’ in **location**. Download and unzip the file. The following file structure should be created: (ADD IMAGE)
+ ![image](./images/demux_only_fileStructure.png)
+‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
+3. __Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources. Move to the directory containing the def file (16s-demux.def) and run the following:
 `singularity build {image name}.sif 16s-demux.def`
 The image will be created locally and a file ‘Name.sif’ will be created in the current working directory. The build should take less than 10 minutes, and if it is completed successfully, the the final output will look something like this:
 Once completed, the file {image name}.sif should be included in the current working directory.
 
-3. Now that the image has been built, you can run the demultiplexing analysis within it as described in ‘> Using Singularity/Apptainer’ using the image ‘Name.sif’. 
+4. Now that the image has been built, you can run the demultiplexing analysis within it as described in ‘> Using Singularity/Apptainer’ using the image ‘Name.sif’. 
 
 
 
