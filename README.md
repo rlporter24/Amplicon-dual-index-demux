@@ -30,7 +30,7 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   Navigate to the 16S-demux-edits directory and if necessary, edit line 4 so that it reads `configfile: “config/config.yaml”` rather than `configfile: “config/test_config.yaml”`. In the ‘config’ directory, update ‘config.yaml’ so that `samplesheet:` and `fastqlist:` in lines 2 and 4 are followed by the paths to your input samplesheet and fastqlist, respectively (more details in the __Inputs__ section). If you are using custom primers or indexes, you may need to adjust the input file for ‘indicies:’ or the lengths of read1 and read2 indexes and primers (lines 3, 5, 6, 7, 8). For more details on custom primers, see the __Custom Primers__ section. 
   Once the inputs and paths are updated, run `snakemake --cores 1` within the 16S-demux-edits directory. The analysis time will vary with the number and size of input files. However, XXXestimatesXXX. If the run is successful, a message similar to that below should be output:
 
-  After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code: `docker rm  [container name]`. This will not remove the image (XXX) - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it. 
+  After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code: `docker rm  [container name]`. This will not remove the image - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it. 
 
   __Note:__ Before starting the actual run, you can use the command ‘snakemake -n’ to do a dry run. This is helpful for ensuring that names and file locations are correct before starting the full run. 
 
@@ -102,9 +102,10 @@ Format: Files should be formatted as gzipped fastq files, or “.fastq.gz” fil
 Location: If the demultiplexing will be run locally or on a server, fastq files just need to be somewhere on that server. The paths to fastq files are defined by the entries included in the fastq file list and the config.yaml variable ‘fastqdir’. If the absolute path to the fastq files is provided in the fastq file list, then the fastqdir variable in config.yaml should be an empty string (“”). Otherwise, the ‘fastqdir’ path from config.yaml concatenated with the path in the fastq file list is correct. 
 For example, the file “/home/users/TEST/sequencing/exp01/fastqs/TEST_R1_001.fastq.gz” could be accurately described with the following combinations (and plenty others!):
 
-fastqdir:	(set in config.yaml)			fastq file list:
-“”					“/home/users/TEST/sequencing/exp01/fastqs/TEST_R1_001.fastq.gz”
-“/home/users/TEST/sequencing/exp01/fastqs/”	“TEST_R1_001.fastq.gz”
+| fastqdir:	(set in config.yaml) |	fastq file list: | 
+| --- | --- |
+| “”	|	“/home/users/TEST/sequencing/exp01/fastqs/TEST_R1_001.fastq.gz” |
+| “/home/users/TEST/sequencing/exp01/fastqs/”	| “TEST_R1_001.fastq.gz” |
 
 
 2. Fastq file list:
@@ -158,7 +159,7 @@ The image will be created locally with the name and version provided following -
 ### Singularity/Apptainer:
 To build a singularity/Apptainer image, ensure the necessary files are arranged properly and build from the Def file:
 
-1. All necessary files are included in ‘demux_only.zip’ in **location**. Download and unzip the file. The following file structure should be created: (ADD IMAGE)
+1. All necessary files are included in ‘demux_only.zip’ in **location**. Download and unzip the file. The following file structure should be created:
  ![image](./images/demux_only_fileStructure.png)
 ‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 3. __Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources. Move to the directory containing the def file (16s-demux.def) and run the following:
