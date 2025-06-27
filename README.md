@@ -60,11 +60,11 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
 
 3. **Open a shell in the container**\
    To open a shell, run the following command from the directory containing the ‘demux-image.sif’:\
-   `Singularity shell demux-image.sif` \
+   `singularity shell demux-image.sif` \
    This will bring you to a shell within the container where you can interactively run processes.\
-   __Note:__ Depending on your HPC system, you may need extra resources to work in the shell, so it is not recommended that you do this on a login node. You can use a compute node, or allocate resources using a job manager. An example Slurm script is included in the 16S-demux_edits directory, entitled ‘submitSnakemake.sh’. 
+   __Note:__ Depending on your HPC system, you may need extra resources to work in the shell, so it is not recommended that you do this on a login node. You can use a compute node, or allocate resources using a job manager. An example Slurm script is included in the 16S-demux_edits directory, entitled ‘submitSnakemake.sh’.
 
-4. **Run the test analysis**\
+5. **Run the test analysis**\
    To check that the set up was successful, run a quick analysis using provided test data. To do this, edit the Snakefile so that line 4 reads:\
   `configfile: "config/test_config.yaml"`\
   rather than:\
@@ -76,7 +76,7 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
   If these files are generated in ‘trimmed’, the run has been successful. Details on intermediate files are included below in >Test run full outputs.\
   To exit the container, simply type ‘exit’.
 
-5. **Run the actual analysis**\
+6. **Run the actual analysis**\
   To run the actual analysis, ensure your input files are accurate and located in the correct directory (see >Inputs for details), and ensure that the paths within ‘config/config.yaml’ are correct. Next edit the Snakefile so that line 4 reads:\
   `config/config.yaml`\
   rather than:\
@@ -167,8 +167,8 @@ To build a singularity/Apptainer image, ensure the necessary files are arranged 
  ![image](./images/demux_only_fileStructure.png)
 ‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 3. __Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources. Move to the directory containing the def file (16s-demux.def) and run the following:
-`singularity build {image name}.sif 16s-demux.def`
-The image will be created locally and a file ‘Name.sif’ will be created in the current working directory. The build should take less than 10 minutes, and if it is completed successfully, the the final output will look something like this:
+`singularity build demux-image.sif 16s-demux.def`
+The image will be created locally and a file ‘demux-image.sif’ will be created in the current working directory. The build should take less than 10 minutes, and if it is completed successfully, the the final output will look something like this:
 Once completed, the file {image name}.sif should be included in the current working directory.
 
 4. Now that the image has been built, you can run the demultiplexing analysis within it as described in ‘> Using Singularity/Apptainer’ using the image ‘Name.sif’. 
