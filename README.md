@@ -175,15 +175,11 @@ Once completed, the file {image name}.sif should be included in the current work
 
 
 
-# Sections below are under construction! Please ignore!
-
-
-
 ## Custom Primers
-The instructions and code above all assume the primers and indexes used are the standard ones presented in Xthe paperX. If custom primers/indexes are used, several changes will need to be made.
+The instructions and code above all assume the primers and indexes used are the standard 16S sets presented in the paper. If custom primers/indexes are used, several changes will need to be made.
 
 1. **Update config/indexfordemux.txt**\
-Make sure the indexfordemux.txt file (which contains the indicies used for demultiplexing R1 indicies) included in the config directory and specified in the config.yaml file corresponds to the appropriate region. We provide primer sequences and corresponding indexfordemux.txt files for the following 16S regions: V1 - V2, V1 - V3, V2 - V3, V3, V3 - V4, V4 - V5, V5, V5 - V7, V6, V6 - V7, V6 - V8, and V7 - V9. These are provided in the 'other indexfordemux' folder, along with an Excel worksheet showing how these were derived, with a template for making additional primers ('other indexfordemux.xlsx'). If you want to amplify another region, you can use this template tomake a custom indexfordemux.sh file.\
+Make sure the indexfordemux.txt file (which contains the indicies used for demultiplexing R1 indicies) included in the config directory and specified in the config.yaml file corresponds to the appropriate region. We provide primer sequences and corresponding indexfordemux.txt files for the following 16S regions: V1 - V2, V1 - V3, V2 - V3, V3, V3 - V4, V4 - V5, V5, V5 - V7, V6, V6 - V7, V6 - V8, and V7 - V9. These are provided in the 'other indexfordemux' folder, along with an Excel worksheet showing how these were derived, with a template for making additional primers ('other indexfordemux.xlsx'). If you want to amplify another region, you can use this template tomake a custom indexfordemux.sh file. To do so, replace the entries in 'geneF' with the first part of the gene sequence (5' - 3', coding strand) and the entries in 'geneR' with the end of the gene sequence (5' - 3', template strand).\
 As a reminder, the indexes have variable lengths or ‘phases’ as shown in the table below:\
 
 | phase | variable FP | variable RP |
@@ -196,9 +192,9 @@ As a reminder, the indexes have variable lengths or ‘phases’ as shown in the
 | 5 | CAGTC | AA |
 | 6 | ATCGAT | C|
 | 7 | GCAAGTC  | |
- 
 
 However, during the demultiplexing, we treat the reads as if they have 7 base pair indexes on both ends. Any of the 7 base pairs that are not filled in with the index will be the spacer/gene-specific primer sequence. The table below shows the default indexes, with the actual index base pairs underlined, the spacer base pairs in lowercase, and the gene-specific primer regions uppercase and bolded. (The ‘bc’ or barcode column is simply the concatenated strings of read1index and read2index). The index, spacer, and gene specific regions will need to be edited according to the changes made.\
+
 | phase | read1index | read2index | bc |
 | --- | --- | --- | --- |
 | 0 | cagt**AGA** | <ins>ATGGACT</ins> | CAGTAGAATGGACT | 
@@ -208,12 +204,10 @@ However, during the demultiplexing, we treat the reads as if they have 7 base pa
 | 4 | <ins>TAAC</ins>cag | <ins>GTA</ins>atcc | TAACCAGGTAATCC | 
 | 5 | <ins>CAGTC</ins>ca | <ins>AA</ins>atcc**T** | CAGTCCAAAATCCT | 
 | 6 | <ins>ATCGAT</ins>c | <ins>C</ins>atcc**TA** | ATCGATCCATCCTA | 
-| 7 | <ins>GCAAGTC</ins> | atcc**TAC** | GCAAGTCATCCTAC | 
+| 7 | <ins>GCAAGTC</ins> | atcc**TAC** | GCAAGTCATCCTAC |
 
 If the same primer design and index scheme is used, and only the gene-specific region is changed, only the gene-specific regions within the indices will need to be updated. For the primers above, the gene of interest starts with 'AGA...' and ends with 'GTA' on the forward strand, hence the regions of homology include 'AGA' and 'TAC', both in the 5' to 3' direction:\
-
-[image?]
-
+[image?]\
 For a gene reading 'ATG ... CGT', the regions of homology within primers would become 'ATG' and 'ACG', both in the 5' to 3' direction. Thus the indexfordemux table should be edited to:\
 
 | phase | read1index | read2index | bc |
@@ -225,14 +219,24 @@ For a gene reading 'ATG ... CGT', the regions of homology within primers would b
 | 4 | <ins>TAAC</ins>cag | <ins>GTA</ins>atcc | TAACCAGGTAATCC | 
 | 5 | <ins>CAGTC</ins>ca | <ins>AA</ins>atcc**A** | CAGTCCAAAATCCT | 
 | 6 | <ins>ATCGAT</ins>c | <ins>C</ins>atcc**AC** | ATCGATCCATCCTA | 
-| 7 | <ins>GCAAGTC</ins> | atcc**ACG** | GCAAGTCATCCTAC | 
+| 7 | <ins>GCAAGTC</ins> | atcc**ACG** | GCAAGTCATCCTAC |
 
 Note that only the gene-specific regions have changed, and the index and spacer sequences are identical to the initial set.\
 
 __Note:__ We recommend avoiding any mixed base characters such as ‘W’ or ‘N’ in the first three positions of your gene specific primer. If such bases are included, you will need to make several version of the indexfordemux.txt table, one for each potential base (e.g., for a ‘W’, one version should have an ‘A’ and one should have a ‘T’). The demultiplexing should be run twice, once for each indexfordemux.txt file. 
 
 2. **Update the index lengths in config/config.yaml**\ 
-Within the ‘config/config.yaml’ file, the index/primer lengths will need to be updated. The “lenR1index” and “lenR2index” should be set to the longest version of these (e.g., in the provided primer/index set, the longest sequence of index bases is 7, so the value is set to 7). The “lenR1primer” and “lenR2primer” values should be set to equal the length of the gene-specific primer sequence plus the length of the spacer. 
+Within the ‘config/config.yaml’ file, the index/primer lengths may need to be updated. The “lenR1index” and “lenR2index” should be set to the longest version of these (e.g., in the provided primer/index set, the longest sequence of index bases is 7, so the value is set to 7). The “lenR1primer” and “lenR2primer” values should be set to equal the length of the gene-specific primer sequence plus the length of the spacer. For the 16S sets with provided indexfordemux.txt files (V1 - V2, V1 - V3, V2 - V3, V3, V3 - V4, V4 - V5, V5, V5 - V7, V6, V6 - V7, V6 - V8, and V7 - V9), the lengths do not need to be changed; the defaults below are correct.
+
+| Region | length | 
+| --- | --- | 
+| lenR1primer |  23 | 
+| lenR2primer | 24 | 
+| lenR1index | 7 | 
+| lenR2index | 7 |
+
+# Sections below are under construction! Please ignore!
+
 
 ## Test run full outputs
 Within ‘workflow’, there should be a ‘test_out’ directory with ‘demux’ and ‘trimmed’ directories:
