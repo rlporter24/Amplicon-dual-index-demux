@@ -71,12 +71,12 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
   `configfile: "config/config.yaml"`\
   Then run:\
   `snakemake --cores 1`
-  within the ‘16S_demux_edits’ directory. This should take about 16 minutes depending on your system, and will run a test analysis using ‘config/test_fastq.txt’,   ‘config/test_samplesheet.txt’ and the test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated:\
-   *image of outputs here...*\
-  If these files are generated in the ‘trimmed’ directory, the run has been successful. Details on intermediate files are included below in >Test run full outputs.\
+  within the ‘16S_demux_edits’ directory. This should take about 16 minutes depending on your system, and will run a test analysis using ‘config/test_fastq.txt’,   ‘config/test_samplesheet.txt’ and the test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated within the test_out/trimmed directory:\
+     <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
+  If the files are generated in the ‘trimmed’ directory are all present, the run has been successful. Details on intermediate files are included below in >Test run full outputs.\
   To exit the container, simply type ‘exit’.
 
-6. **Run the actual analysis**\
+7. **Run the actual analysis**\
   To run the actual analysis, ensure your input files are accurate and located in the correct directory (see >Inputs for details), and ensure that the paths within ‘config/config.yaml’ are correct. Next edit the Snakefile so that line 4 reads:\
   `config/config.yaml`\
   rather than:\
@@ -87,7 +87,7 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
   __Note:__ To use this submission script, be sure to change the SBATCH parameters at the top as needed, and ensure that the image name in the line:\
 `singularity shell ../demux-image.sif`\
 matches the image name from your build. The analysis time will vary with the number and size of input files. If the run is successful, a message similar to that below should be output:\
-*example output*.\
+  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/snakemakeSuccessOutput.png?raw=true" alt="Alt Text" width="750" height="400">\
 __Note:__ Before starting the actual run, you can use the command `snakemake -n` to do a dry run. This is helpful for ensuring that names and file locations are correct before starting the full run. 
 
 
@@ -96,8 +96,8 @@ In addition to the sequencing data itself, there are two input files needed for 
 The general file structure created by the Docker/Singularity images is shown below. Within the main folder (16s-demux), there are two important folders, config and workflow. The code for running the analysis is stored in workflow/rules/, and outputs are generated within workflow/out/. Test files and most input files are found within the config folder.\
 Test files are included within config/ (‘test_config.yaml’, ‘test_fastq.txt’, ‘test_samplesheet.txt’), and the official config.yaml file, fastq file list, and samplesheets should also be included in the config folder. Below, the fastq file list and samplesheets are named ‘fastqlist.txt’ and ‘samplesheet.tsv’ respectively, but the names can vary. The indexfordemux.txt file, includes the unique in-line indices. The default indexfordemux.txt file features the 16S V4 indexes, so this file will need to be swapped with the corresponding indexfordemux.txt file for other regions. 
 
-The script for initiating the Snakemake run using Slurm (submitSnakemake.sh) and the Snakefile encoding the analysis are found in the top 16s-demux file. 
- ![image](./images/16s-demux_fileStructure.png)
+The script for initiating the Snakemake run using Slurm (submitSnakemake.sh) and the Snakefile encoding the analysis are found in the top 16s-demux file.\
+  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/16s-demux_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">
 
 1. **Fastq data:**\
   **Names:** Sample names should not include any spaces, underscores, or periods (hyphens are fine). If they do, they should be renamed before demultiplexing.\
@@ -167,16 +167,16 @@ The image will be created locally with the name and version provided following -
 To build a singularity/Apptainer image, ensure the necessary files are arranged properly and build from the '.def' file:
 
 1. All necessary files are included in ‘demux.zip’ in **location**. Download and unzip the file. The following file structure should be created:
- ![image](./images/demux_only_fileStructure.png)
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/demux_only_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">\
 ‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 __Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources.
-2. Move to the directory containing the def file (16s-demux.def) and run the following:
+3. Move to the directory containing the def file (16s-demux.def) and run the following:
 `singularity build demux-image.sif 16s-demux.def`
 The image will be created locally and a file ‘demux-image.sif’ will be created in the current working directory. The build should take less than 10 minutes, and if it is completed successfully, the the final output will look something like this:
-*insert image here*
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/buildSuccessOutput.png?raw=true" alt="Alt Text" width="750" height="400">\
 Once completed, the file 'demux-image.sif' should be found in the current working directory.
 
-3. Now that the image has been built, you can run the demultiplexing analysis within it as described in ‘> Using Singularity/Apptainer’ using the image ‘demux-image.sif’. 
+4. Now that the image has been built, you can run the demultiplexing analysis within it as described in ‘> Using Singularity/Apptainer’ using the image ‘demux-image.sif’. 
 
 
 
@@ -186,7 +186,9 @@ The instructions and code above all assume the primers and indexes used are the 
 1. **Update config/indexfordemux.txt**\
 Make sure the indexfordemux.txt file (which contains the indicies used for demultiplexing R1 indicies) included in the config directory and specified in the 'config.yaml' file corresponds to the appropriate region. We provide primer sequences and corresponding 'indexfordemux.txt' files for the following 16S regions: V1 - V2, V1 - V3, V2 - V3, V3, V3 - V4, V4 - V5, V5, V5 - V7, V6, V6 - V7, V6 - V8, and V7 - V9. These are provided in the 'other indexfordemux' folder, along with an Excel worksheet showing how these were derived, with a template for making additional primers ('other indexfordemux.xlsx'). If you want to amplify another region, you can use this template to make a custom 'indexfordemux.sh' file. (To make a custom 'indexfordemux.sh' file in the 'other indexfordemux.xlsx' file, replace the entries in 'geneF' with the first part of the gene sequence (5' - 3', coding strand) and the entries in 'geneR' with the end of the gene sequence (5' - 3', template strand)).\
 **(include image schematic of the reads with the index/spacer/genespecific region, etc?)**\
-As a reminder, the indexes have variable lengths or ‘phases’ as shown in the table below:
+As a reminder, the final structure of reads after the library prep will look soemthing like this (lengths not to scale):\
+  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/primerStructureImage.png?raw=true" alt="Alt Text" width="400" height="400">\
+The round 1 indexes have variable lengths or ‘phases’ as shown in the table and image below:
 
 | phase | variable FP | variable RP |
 | --- | --- | --- |
@@ -199,7 +201,9 @@ As a reminder, the indexes have variable lengths or ‘phases’ as shown in the
 | 6 | ATCGAT | C|
 | 7 | GCAAGTC  | |
 
-However, during the demultiplexing, we treat the reads as if they have 7 base pair indexes on both ends. Any of the 7 base pairs that are not filled in with the index will be the spacer/gene-specific primer sequence. The table below shows the default indexes, with the actual index base pairs underlined, the spacer base pairs in lowercase, and the gene-specific primer regions uppercase and bolded. (The ‘bc’ or barcode column is simply the concatenated strings of read1index and read2index). The index, spacer, and gene specific regions will need to be edited according to the changes made.
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/phasedPrimerImage.png?raw=true" alt="Alt Text" width="400" height="400">
+
+  However, during the demultiplexing, we treat the reads as if they have 7 base pair indexes on both ends. Any of the 7 base pairs that are not filled in with the index will be the spacer/gene-specific primer sequence. The table below shows the default indexes, with the actual index base pairs underlined, the spacer base pairs in lowercase, and the gene-specific primer regions uppercase and bolded. (The ‘bc’ or barcode column is simply the concatenated strings of read1index and read2index). The index, spacer, and gene specific regions will need to be edited according to the changes made.
 
 | phase | read1index | read2index | bc |
 | --- | --- | --- | --- |
@@ -212,8 +216,7 @@ However, during the demultiplexing, we treat the reads as if they have 7 base pa
 | 6 | <ins>ATCGAT</ins>c | <ins>C</ins>atcc**TA** | ATCGATCCATCCTA | 
 | 7 | <ins>GCAAGTC</ins> | atcc**TAC** | GCAAGTCATCCTAC |
 
-If the same primer design and index scheme is used, and only the gene-specific region is changed, only the gene-specific regions within the indices will need to be updated. For the primers above, the gene of interest starts with 'AGA...' and ends with 'GTA' on the forward strand, hence the regions of homology include 'AGA' and 'TAC', both in the 5' to 3' direction:\
-[image?]\
+If the same primer design and index scheme is used, and only the gene-specific region is changed, only the gene-specific regions within the indices will need to be updated. For the primers above, the gene of interest starts with 'AGA...' and ends with 'GTA' on the forward strand, hence the regions of homology include 'AGA' and 'TAC', both in the 5' to 3' direction.\
 For a gene reading 'ATG ... CGT', the regions of homology within primers would become 'ATG' and 'ACG', both in the 5' to 3' direction. Thus the indexfordemux table should be edited to:
 
 | phase | read1index | read2index | bc |
