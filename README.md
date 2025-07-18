@@ -13,12 +13,12 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   **Pulling image:** \
   Launch Docker. Then in a terminal, run `docker pull XXX`. This will make a local copy of the Docker image XXX, which contains the code and environment needed to process the data, as well as example input files for running a test.\
   **Building image:**\
-  Instead of pulling the docker image from the Docker hub, the docker image can also be built from the Docker file. This process takes much longer and is not recommended, but is described in the >Building images section below. 
+  Instead of pulling the docker image from the Docker hub, the docker image can also be built from the Dockerfile. This process takes longer and is not recommended, but is described in the >Building images section below. 
 
 2. **Run the test analysis**
   To check that the set up was successful, run a quick analysis using provided test data. Start by running\
   `docker run -it XXX`\
-  to open a container from the image XXX in an interactive mode (specified by the flags -it). In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, navigate to the 16S-demux-edits directory and edit 'Snakefile’ so that line 4 reads:\
+  to open a container from the image XXX in an interactive mode (specified by the flags -it). If you built your own image, 'XXX' will be the '{name}:{version}' you provided for the build, but for the provided image from docer hub, 'XXX' will be XXX. In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, navigate to the 16S-demux-edits directory and edit 'Snakefile’ so that line 4 reads:\
   `configfile: "config/test_config.yaml"`\
   rather than:\
   `configfile: "config/config.yaml"`\
@@ -26,11 +26,12 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   `configfile: “config/test_config.yaml”`\
   then no edit is necessary. Next, run:\
   `snakemake --cores 1`\
-  This should take about 6 minutes, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
-  If these files are generated in ‘trimmed’, the run has been successful! Details on intermediate files are included below in the __Test run full outputs__ section.\
+  This should take about 5 minutes or fewer, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
+  If these files are generated in ‘trimmed’, the run has been successful! 
   To exit the container, simply type ‘exit’.
 
-3. **Run the actual analysis**\
+4. **Run the actual analysis**\
   From outside of the container, ***Move any files that are needed in?***\
   Next, run:\
   `docker run -it XXX`\
@@ -43,7 +44,7 @@ In the ‘config’ directory, update ‘config.yaml’ so that `samplesheet:` a
 Once the inputs and paths are updated, run:\
 `snakemake --cores 1`\
 within the 16S-demux directory. The analysis time will vary with the number and size of input files. However, XXXestimatesXXX. If the run is successful, a message similar to that below should be output:
-4. **Clean Up**\
+5. **Clean Up**\
 After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code:\
 `docker rm  [container name]`\
 This will not remove the image - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it.\
@@ -62,7 +63,7 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
    To open a shell, run the following command from the directory containing the ‘demux-image.sif’:\
    `singularity shell demux-image.sif` \
    This will bring you to a shell within the container where you can interactively run processes.\
-   __Note:__ Depending on your HPC system, you may need extra resources to work in the shell, so it is not recommended that you do this on a login node. You can use a compute node, or allocate resources using a job manager. An example Slurm script is included in the 16S-demux directory, entitled ‘submitSnakemake.sh’.
+
 
 5. **Run the test analysis**\
    To check that the set up was successful, run a quick analysis using provided test data. To do this, edit the Snakefile so that line 4 reads:\
@@ -73,7 +74,7 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
   `snakemake --cores 1`
   within the ‘16S_demux_edits’ directory. This should take about 16 minutes depending on your system, and will run a test analysis using ‘config/test_fastq.txt’,   ‘config/test_samplesheet.txt’ and the test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated within the test_out/trimmed directory:\
      <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
-  If the files are generated in the ‘trimmed’ directory are all present, the run has been successful. Details on intermediate files are included below in >Test run full outputs.\
+  If the files are generated in the ‘trimmed’ directory are all present, the run has been successful.\
   To exit the container, simply type ‘exit’.
 
 7. **Run the actual analysis**\
@@ -149,16 +150,14 @@ __Note:__ Periods in the samplenames are okay for this demultiplexing process, b
 ## Building Images
 ### Docker:
 To build a Docker image, ensure the necessary field are arranged properly, and build from the Dockerfile:
-1. All necessary files are included in ‘Demux only files.zip’ in **location**. Download and unzip the file. The following file structure should be created:
-Within the main directory:
-
-Within 16s-demux:
-
+1. All necessary files are included in ‘Demux only files.zip’ in **location**. Download and unzip the file. The following file structure should be created:\
+<img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/docker_demux_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">\
 ‘Dockerfile’ and ‘requirements.txt’ are needed for the building process, and the fastq_data directory contains example data for the test. All of the code is contained within the ‘16s-demux’ directory, and outputs will be generated there as well.
 2. __Note:__ This step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources. 
 Move to the directory containing the Dockerfile and run the following:
 ‘docker build -t {name}:{version} .’
-The image will be created locally with the name and version provided following -t. The build should take a few minutes, and if it is completed successfully, the the final output will look something like this:
+The image will be created locally with the name and version provided following -t. The build should take a few minutes, and if it is completed successfully, the the final output will look something like this:\
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/docker_buildSuccessOutput.png?raw=true" alt="Alt Text" width="400" height="400">\
 
 3. Now that the image has been build, you can run the demultiplexing analysis within it using the command ‘docker run -it {name:version}’
 
@@ -167,7 +166,7 @@ The image will be created locally with the name and version provided following -
 To build a singularity/Apptainer image, ensure the necessary files are arranged properly and build from the '.def' file:
 
 1. All necessary files are included in ‘demux.zip’ in **location**. Download and unzip the file. The following file structure should be created:
- <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/demux_only_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">\
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/sing_demux_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">\
 ‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 __Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources.
 3. Move to the directory containing the def file (16s-demux.def) and run the following:
@@ -245,7 +244,7 @@ Within the ‘config/config.yaml’ file, the index/primer lengths may need to b
 | lenR2index | 7 |
 
 # Sections below are under construction! Please ignore!
-
+'Details on intermediate files are included below in the __Test run full outputs__ section.\'
 
 ## Test run full outputs
 Within ‘workflow’, there should be a ‘test_out’ directory with ‘demux’ and ‘trimmed’ directories:
