@@ -4,6 +4,15 @@ Code for demultiplexing sequencing data generated using our Nova/Nex/MiSeq dual 
 READ ME:
 The following document describes how to use the Docker and Singularity/Apptainer images to use our demultiplexing code. By using these containerization platforms, users can avoid the time consuming process of installing dependencies and configuring environments. 
 
+**Contents:**
+* [Using Docker](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#using-docker)
+* [Using Singularity/Apptainer](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#using-singularityapptainer)
+* [Inputs](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#inputs)
+* [Building Images](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#building-images)
+* [Building with Docker](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#building-with-docker)
+* [Building with Singularity/Apptainer](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#building-with-singularityapptainer)
+* [Custom Primers](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#custom-primers)
+
 ## Using Docker
 To analyze our code to analyze dual-indexed sequencing data, first ensure that Docker is installed. Docker is a handy platform for sharing not only code but also coding environments, which enables easy code sharing without hours of installing dependencies. You can find instructions on Docker installation here {https://docs.docker.com/engine/install/}. Once Docker is installed, open the Docker desktop application or run ‘systemctl start docker’ to launch the Docker Daemon. 
 
@@ -29,17 +38,15 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   This should take about 5 minutes or fewer, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
   If these files are generated in ‘trimmed’, the run has been successful! 
-  To exit the container, simply type ‘exit’.
+  To exit the container, simply type ‘exit’, or stay in the container to run the actual analysis.
 
 3. **Run the actual analysis**\
-  First, launch an interactive container by running:\
+   If you do not already have an open container, launch an interactive container by running:\
   `docker run -it XXX` .\
-
 Next, we can move in the input files (The essential inputs will be the raw fastq data, a fastq file list, and a samplesheet. Details on creating these inputs for your actual analysis are included below in >Inputs.). Transfering input files can be done from inside or outside of the container, as described here {https://docs.docker.com/reference/cli/docker/container/cp/}. From outside of the container (in a separate terminal), run:\
   `docker cp {local_path} {CONTAINER}:{container_path}`\
   The {local_path} can be to an individual file or a directory. The {CONTAINER} should be the container name, not the image name. The container name can be found by running 
   `docker container ls` to list all the current containers, or by looking at the containers in the docker decktop GUI. The {container_path} should be provided relative to the '16s-demux' directory, which is the home   directory within the container.\  
-
   Navigate to the 16S-demux directory and if necessary, edit line 4 so that it reads:\
   `configfile: “config/config.yaml”`\
   rather than\
@@ -49,14 +56,15 @@ Once the inputs and paths are updated, run:\
 `snakemake --cores 1`\
 within the 16S-demux directory. The analysis time will vary with the number and size of input files as well as the machine used. If the run is successful, a message similar to that below should be output:\
 <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/snakemakeSuccessOutput.png?raw=true" alt="Alt Text" width="750" height="400">\
-4. **Transfer Output Files Out**\
-Once the run is completed, output files must be transfered out of the container. To move files located in /16s-demux/workflow/out/ to a local destination, run the following:\
-`docker cp {CONTAINER:/workflow/out/} {local_path}`.\
-5. **Clean Up**\
-After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code:\
-`docker rm  [container name]`\
-This will not remove the image - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it.\
 __Note:__ Before starting the actual run, you can use the command ‘snakemake -n’ to do a dry run. This is helpful for ensuring that names and file locations are correct before starting the full run. 
+5. **Transfer Output Files Out**\
+Once the run is completed, output files must be transfered out of the container. To move files located in /16s-demux/workflow/out/ to a local destination, run the following:\
+`docker cp {CONTAINER:/16s-demux/workflow/out/} {local_path}`.\
+6. **Clean Up**\
+After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code:\
+`docker rm  {container name}`\
+This will not remove the image - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it.\
+
 
 
 
@@ -156,7 +164,7 @@ __Note:__ Periods in the samplenames are okay for this demultiplexing process, b
 
 
 ## Building Images
-### Docker:
+### Building with Docker:
 To build a Docker image, ensure the necessary field are arranged properly, and build from the Dockerfile:
 1. All necessary files are included in ‘Demux only files.zip’ in **location**. Download and unzip the file. The following file structure should be created:\
 <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/docker_demux_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">\
@@ -170,7 +178,7 @@ The image will be created locally with the name and version provided following -
 3. Now that the image has been build, you can run the demultiplexing analysis within it using the command ‘docker run -it {name:version}’
 
 
-### Singularity/Apptainer:
+### Building with Singularity/Apptainer:
 To build a singularity/Apptainer image, ensure the necessary files are arranged properly and build from the '.def' file:
 
 1. All necessary files are included in ‘demux.zip’ in **location**. Download and unzip the file. The following file structure should be created:
