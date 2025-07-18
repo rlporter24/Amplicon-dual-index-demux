@@ -31,7 +31,7 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   If these files are generated in ‘trimmed’, the run has been successful! 
   To exit the container, simply type ‘exit’.
 
-4. **Run the actual analysis**\
+3. **Run the actual analysis**\
   First, launch an interactive container by running:\
   `docker run -it XXX` .\
 
@@ -47,8 +47,12 @@ Next, we can move in the input files (The essential inputs will be the raw fastq
 In the ‘config’ directory, update ‘config.yaml’ so that `samplesheet:` and `fastqlist:` in lines 2 and 4 are followed by the paths to your input samplesheet and fastqlist, respectively (more details in the __Inputs__ section). If you are using custom primers or indexes, you may need to adjust the input file for ‘indicies:’ or the lengths of read1 and read2 indexes and primers (lines 3, 5, 6, 7, 8). For more details on custom primers, see the __Custom Primers__ section.\
 Once the inputs and paths are updated, run:\
 `snakemake --cores 1`\
-within the 16S-demux directory. The analysis time will vary with the number and size of input files. However, XXXestimatesXXX. If the run is successful, a message similar to that below should be output:
-6. **Clean Up**\
+within the 16S-demux directory. The analysis time will vary with the number and size of input files as well as the machine used. If the run is successful, a message similar to that below should be output:\
+<img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/snakemakeSuccessOutput.png?raw=true" alt="Alt Text" width="750" height="400">\
+4. **Transfer Output Files Out**\
+Once the run is completed, output files must be transfered out of the container. To move files located in /16s-demux/workflow/out/ to a local destination, run the following:\
+`docker cp {CONTAINER:/workflow/out/} {local_path}`.\
+5. **Clean Up**\
 After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code:\
 `docker rm  [container name]`\
 This will not remove the image - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it.\
