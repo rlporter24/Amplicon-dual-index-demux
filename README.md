@@ -20,14 +20,14 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
 1. **Installation and setting up the Docker image** \
   There are two ways to acquire the docker image needed for analysis, either by pulling directly from docker hub (the easiest approach) or using the dockerfile and other inputs provided in 'XXX.zip' to build the docker image.\
   **Pulling image:** \
-  Launch Docker. Then in a terminal, run `docker pull XXX`. This will make a local copy of the Docker image XXX, which contains the code and environment needed to process the data, as well as example input files for running a test.\
+  Launch Docker. Then in a terminal, run `docker pull rlporter24/dualindex-demux:1.0`. This will make a local copy of the Docker image 'rlporter24/dualindex-demux', which contains the code and environment needed to process the data, as well as example input files for running a test.\
   **Building image:**\
   Instead of pulling the docker image from the Docker hub, the docker image can also be built from the Dockerfile. This process takes longer and is not recommended, but is described in the >Building images section below. 
 
 2. **Run the test analysis**
   To check that the set up was successful, run a quick analysis using provided test data. Start by running\
-  `docker run -it XXX`\
-  to open a container from the image XXX in an interactive mode (specified by the flags -it). If you built your own image, 'XXX' will be the '{name}:{version}' you provided for the build, but for the provided image from docer hub, 'XXX' will be XXX. In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, navigate to the 16S-demux-edits directory and edit 'Snakefile’ so that line 4 reads:\
+  `docker run -it rlporter24/dualindex-demux:1.0`\
+  to open a container from the image rlporter24/dualindex-demux in an interactive mode (specified by the flags -it). If you built your own image, replace 'rlporter24/dualindex-demux' with the  '{name}:{version}' you provided for the build. In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, navigate to the 16S-demux-edits directory and edit 'Snakefile’ so that line 4 reads:\
   `configfile: "config/test_config.yaml"`\
   rather than:\
   `configfile: "config/config.yaml"`\
@@ -42,8 +42,8 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
 
 3. **Run the actual analysis**\
    If you do not already have an open container, launch an interactive container by running:\
-  `docker run -it XXX` .\
-Next, we can move in the input files (The essential inputs will be the raw fastq data, a fastq file list, and a samplesheet. Details on creating these inputs for your actual analysis are included below in >Inputs.). Transfering input files can be done from inside or outside of the container, as described here {https://docs.docker.com/reference/cli/docker/container/cp/}. From outside of the container (in a separate terminal), run:\
+  `docker run -it rlporter24/dualindex-demux:1.0` .\
+As before, if you built your own image, replace 'rlporter24/dualindex-demux' with the  '{name}:{version}' you provided for the build. Next, we can move in the input files (The essential inputs will be the raw fastq data, a fastq file list, and a samplesheet. Details on creating these inputs for your actual analysis are included below in >Inputs.). Transfering input files can be done from inside or outside of the container, as described here {https://docs.docker.com/reference/cli/docker/container/cp/}. From outside of the container (in a separate terminal), run:\
   `docker cp {local_path} {CONTAINER}:{container_path}`\
   The {local_path} can be to an individual file or a directory. The {CONTAINER} should be the container name, not the image name. The container name can be found by running 
   `docker container ls` to list all the current containers, or by looking at the containers in the docker decktop GUI. The {container_path} should be provided relative to the '16s-demux' directory, which is the home   directory within the container.\  
