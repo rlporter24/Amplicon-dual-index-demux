@@ -32,10 +32,14 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   To exit the container, simply type ‘exit’.
 
 4. **Run the actual analysis**\
-  From outside of the container, ***Move any files that are needed in?***\
-  Next, run:\
-  `docker run -it XXX`\
-  to open a container from the image XXX in an interactive mode. Once we are in the interactive container and have all of the necessary files available, we can start the analysis. Below, we’ll go step by step through the process for the test data. Details on supplying inputs for your actual analysis are included below in >Inputs.\ 
+  First, launch an interactive container by running:\
+  `docker run -it XXX` .\
+
+Next, we can move in the input files (The essential inputs will be the raw fastq data, a fastq file list, and a samplesheet. Details on creating these inputs for your actual analysis are included below in >Inputs.). Transfering input files can be done from inside or outside of the container, as described here {https://docs.docker.com/reference/cli/docker/container/cp/}. From outside of the container (in a separate terminal), run:\
+  `docker cp {local_path} {CONTAINER}:{container_path}`\
+  The {local_path} can be to an individual file or a directory. The {CONTAINER} should be the container name, not the image name. The container name can be found by running 
+  `docker container ls` to list all the current containers, or by looking at the containers in the docker decktop GUI. The {container_path} should be provided relative to the '16s-demux' directory, which is the home   directory within the container.\  
+
   Navigate to the 16S-demux directory and if necessary, edit line 4 so that it reads:\
   `configfile: “config/config.yaml”`\
   rather than\
@@ -44,7 +48,7 @@ In the ‘config’ directory, update ‘config.yaml’ so that `samplesheet:` a
 Once the inputs and paths are updated, run:\
 `snakemake --cores 1`\
 within the 16S-demux directory. The analysis time will vary with the number and size of input files. However, XXXestimatesXXX. If the run is successful, a message similar to that below should be output:
-5. **Clean Up**\
+6. **Clean Up**\
 After the run is completed and outputs have been moved out and saved, exit from the container. The remnants of the container created can be removed with the following code:\
 `docker rm  [container name]`\
 This will not remove the image - only the container that was just now built using this image. Be sure any important data or intermediates are transferred out of the container before removing it.\
