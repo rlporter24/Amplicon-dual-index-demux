@@ -113,8 +113,11 @@ In addition to the sequencing data itself, there are two input files needed for 
 The general file structure created by the Docker/Singularity images is shown below. Within the main folder (16s-demux), there are two important folders, config and workflow. The code for running the analysis is stored in workflow/rules/, and outputs are generated within workflow/out/. Test files and most input files are found within the config folder.\
 Test files are included within config/ (‘test_config.yaml’, ‘test_fastq.txt’, ‘test_samplesheet.txt’), and the official config.yaml file, fastq file list, and samplesheets should also be included in the config folder. Below, the fastq file list and samplesheets are named ‘fastqlist.txt’ and ‘samplesheet.tsv’ respectively, but the names can vary. The indexfordemux.txt file, includes the unique in-line indices. The default indexfordemux.txt file features the 16S V4 indexes, so this file will need to be swapped with the corresponding indexfordemux.txt file for other regions. 
 
+
 The script for initiating the Snakemake run using Slurm (submitSnakemake.sh) and the Snakefile encoding the analysis are found in the top 16s-demux file.\
   <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/16s-demux_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">
+
+**Note:** Most common issues in demultiplexing arise from errors in the input files. To help with troubleshooting, a quick check of the inputs will be conducted as the first step of the pipeline, and a summary will be output to '16s-demux/workflow/out/inputCheck_log.txt' (or '16s-demux/workflow/test_out/inputCheck_log.txt' for tests). If you encounter errors during the actual run but not in the test run, it may be helpful to check this log to ensure the inputs are properly formatted.  
 
 1. **Fastq data:**\
   **Names:** Sample names should not include any spaces, underscores, or periods (hyphens are fine). If they do, they should be renamed before demultiplexing.\
@@ -258,6 +261,17 @@ Within the ‘config/config.yaml’ file, the index/primer lengths may need to b
 | lenR2primer | 24 | 
 | lenR1index | 7 | 
 | lenR2index | 7 |
+
+
+## Troubleshooting
+There are a couple common issues you may hit while demultiplexing described below. 
+
+1. **Errors in inputs**\
+   Getting the inputs perfect may be an iterative process! To help with this, the first step of the pipeline will check that the file paths are valid, there are no disallowed symbols in file names, and the file names in the samplesheet and fastqlist match. Any warning messages will be output in '16s-demux/workflow/out/inputCheck_log.txt' (or '16s-demux/workflow/test_out/inputCheck_log.txt' for tests). If the log only reads 'All done!' no issues were found, so common input errors shouldn't be causing issues.
+
+2. **Inadequate resources**\
+   Another potential issue is inadequate allocation of resources. For building images and running the test analysis, 4GB of memory and one core are sufficient, but larger allocations may speed up these processes. If insufficient memory is allocated, the output errors may be hard to trace back to memory, but will reliably occur at the same stage.
+
 
 # Sections below are under construction! Please ignore!
 'Details on intermediate files are included below in the __Test run full outputs__ section.\'
