@@ -5,13 +5,13 @@ READ ME:
 The following document describes how to use the Docker and Singularity/Apptainer images to use our demultiplexing code. By using these containerization platforms, users can avoid the time consuming process of installing dependencies and configuring environments. 
 
 **Contents:**
-* [Using Docker](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#using-docker)
-* [Using Singularity/Apptainer](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#using-singularityapptainer)
-* [Inputs](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#inputs)
-* [Building Images](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#building-images)
-* [Building with Docker](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#building-with-docker)
-* [Building with Singularity/Apptainer](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#building-with-singularityapptainer)
-* [Custom Primers](https://github.com/rlporter24/Amplicon-dual-index-demux/edit/main/README.md#custom-primers)
+* [Using Docker](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#using-docker)
+* [Using Singularity/Apptainer](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#using-singularityapptainer)
+* [Inputs](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#inputs)
+* [Building Images](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#building-images)
+* [Building with Docker](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#building-with-docker)
+* [Building with Singularity/Apptainer](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#building-with-singularityapptainer)
+* [Custom Primers](https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/README.md#custom-primers)
 
 ## Using Docker
 To analyze our code to analyze dual-indexed sequencing data, first ensure that Docker is installed. Docker is a handy platform for sharing not only code but also coding environments, which enables easy code sharing without hours of installing dependencies. You can find instructions on Docker installation here {https://docs.docker.com/engine/install/}. Once Docker is installed, open the Docker desktop application or run ‘systemctl start docker’ to launch the Docker Daemon. 
