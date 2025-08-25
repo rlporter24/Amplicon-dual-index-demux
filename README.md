@@ -273,23 +273,15 @@ There are a couple common issues you may hit while demultiplexing described belo
    Another potential issue is inadequate allocation of resources. For building images and running the test analysis, 4GB of memory and one core are sufficient, but larger allocations may speed up these processes. If insufficient memory is allocated, the output errors may be hard to trace back to memory, but will reliably occur at the same stage.
 
 
-# Sections below are under construction! Please ignore!
-'Details on intermediate files are included below in the __Test run full outputs__ section.\'
-
 ## Test run full outputs
-Within ‘workflow’, there should be a ‘test_out’ directory with ‘demux’ and ‘trimmed’ directories:
+Within ‘workflow’, there should be a ‘test_out’ directory, containing ‘demux’ and ‘trimmed’ directories. Under ‘demux’, there should be four sets of 3 files; each should have 1 * .extract.log file, and 2 .fastq.gz files. There should also be two directories: ‘R1’ and ‘R2’. The contents of ‘R1’ and ‘R2’ should have the same filenames (but correspond to forward and reverse reads for the specified sample). For each sample in the above, there should be 8 files, ending with ‘-L * .fastq.gz’, where * is an integer from 0 to 7:
 
-Under ‘demux’, there should be four sets of 3 files; each should have 1 *.extract.log file, and 2 .fastq.gz files. There should also be two directories: ‘R1’ and ‘R2’:
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/TestSuccessOutputs_1.png?raw=true" alt="Alt Text" height="600">
 
-The contents of ‘R1’ and ‘R2’ should have the same filenames (but correspond to forward and reverse reads for the specified sample). For each sample in the above, there should be 8 files, ending with ‘-L*.fastq.gz’, where * is an integer from 0 to 7:
 
-Within the ‘trimmed’ directory, there should be a subdirectory ‘A’, and within there, there should be directories ‘R1’, ‘R2’, ‘removed’, and two summary files: ‘lowReadsSummary.txt’, and ‘summary.txt’: 
+Within the ‘trimmed’ directory, there should be two subdirectories, ‘group1’ and 'group2', and within each of those, there should be directories ‘R1’, ‘R2’, ‘removed’, and two summary files: ‘lowReadsSummary.txt’, and ‘summary.txt’: 
+
+ <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs_2.png?raw=true" alt="Alt Text" height="600">
 
 If these files are generated in ‘trimmed’, the run has been successful!
-## Running in a virtual machine
-To demultiplex within a virtual machine, use the Docker instructions above. Additional steps will be needed to import files into the VM for analysis. The files needed will include:
-The fastq file list
-The sample sheet
-Sequencing data (in fastq.gz format)
-???
 
