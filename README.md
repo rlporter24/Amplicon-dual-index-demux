@@ -34,8 +34,8 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   If line 4 already reads\
   `configfile: “config/test_config.yaml”`\
   then no edit is necessary. Next, run:\
-  `snakemake --cores 1`\
-  This should take about 5 minutes or fewer, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
+  `snakemake --cores 1` (or replace 1 with the desired number of cores for this run)\
+  This should take under 5 minutes, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
   If these files are generated in ‘trimmed’, the run has been successful! 
   To exit the container, simply type ‘exit’, or stay in the container to run the actual analysis.
@@ -187,7 +187,7 @@ To build a singularity/Apptainer image, ensure the necessary files are arranged 
 1. All necessary files are included in ‘demux.zip’ in **location**. Download and unzip the file. The following file structure should be created:
  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/sing_demux_fileStructure.png?raw=true" alt="Alt Text" width="400" height="400">\
 ‘16s-demux.def’ and ‘requirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
-__Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources.
+__Note:__ The following step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node or use a job manager to allocate resources. A template slurm script is included in the demux.zip file, named 'slurmBuild.sh'. You may choose to change the node/memory/timing steps based on your system.
 3. Move to the directory containing the def file (16s-demux.def) and run the following:
 `singularity build demux-image.sif 16s-demux.def`
 The image will be created locally and a file ‘demux-image.sif’ will be created in the current working directory. The build should take less than 10 minutes, and if it is completed successfully, the the final output will look something like this:
