@@ -28,14 +28,14 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
 1. **Installation and setting up the Docker image** \
   There are two ways to acquire the docker image needed for analysis, either by pulling directly from docker hub (the easiest approach) or using the dockerfile and other inputs provided in 'XXX.zip' to build the docker image.\
   **Pulling image:** \
-  Launch Docker. Then in a terminal, run `docker pull rlporter24/XXXXXX:1.0`. This will make a local copy of the Docker image 'rlporter24/XXXXXX, which contains the code and environment needed to process the data, as well as example input files for running a test.\
+  Launch Docker. Then in a terminal, run `docker pull rlporter24/demux-dada2:1.0`. This will make a local copy of the Docker image 'rlporter24/demux-dada2:1.0', which contains the code and environment needed to process the data, as well as example input files for running a test.\
   **Building image:**\
   Instead of pulling the docker image from the Docker hub, the docker image can also be built from the Dockerfile. This process takes longer and is not recommended. If you choose to build from the Dockerfile, follow the instructions provided on the main readme, using the input file XXX.zip.\
 
 
 3. **Run the test analysis**
   To check that the set up was successful, run a quick analysis using provided test data. Start by running\
-  `docker run -it rlporter24/XXXXX:1.0`\
+  `docker run -it rlporter24/demux-dada2:1.0`\
   to open a container from the image rlporter24/dualindex-demux in an interactive mode (specified by the flags -it). If you built your own image, replace 'rlporter24/dualindex-demux' with the  '{name}:{version}' you provided for the build. In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, navigate to the 16S-demux-edits directory and edit 'Snakefile’ so that line 4 reads:\
   `configfile: "config/test_config.yaml"`\
   rather than:\
@@ -43,7 +43,7 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
   If line 4 already reads\
   `configfile: “config/test_config.yaml”`\
   then no edit is necessary. Next, run:\
-  `snakemake --cores 1`\
+  `snakemake --cores 1` (or replace 1 with the number of cores you wish to use)\
    replacing 1 with the desired number of cores. This should take about XXXXX minutes or fewer, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
   REPLACE IMAGE!!!\
