@@ -29,15 +29,12 @@ To analyze our code to analyze dual-indexed sequencing data, first ensure that D
 3. **Run the test analysis**
   To check that the set up was successful, run a quick analysis using provided test data. Start by running\
   `docker run -it rlporter24/dualindex-demux:1.0`\
-  to open a container from the image rlporter24/dualindex-demux in an interactive mode (specified by the flags -it). If you built your own image, replace 'rlporter24/dualindex-demux' with the  '{name}:{version}' you provided for the build. In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, navigate to the 16S-demux-edits directory and check that 'Snakefile’ line 4 reads:\
-  `configfile: "config/test_config.yaml"`\
-  rather than:\
-  `configfile: "config/config.yaml"`\
-\
-Next, run:\
-  `snakemake --cores 1`\
+  to open a container from the image rlporter24/dualindex-demux in an interactive mode (specified by the flags -it). If you built your own image, replace 'rlporter24/dualindex-demux' with the  '{name}:{version}' you provided for the build. In this mode, we can enter a series of commands, step by step within this container. All of the necessary input files are already included within the container, so no files need to be imported. To run the test, run:\
+  `snakemake --cores 1 -s test_Snakefile`\
  (or replace 1 with the desired number of cores for this run)\. This should take under 5 minutes, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’ and test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated in ‘workflow/test_out/trimmed’:\
  <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
+### ^ THIS WILL NEED TO BE UPDATED WITH NEW NAMES!\
+
   If these files are generated in ‘trimmed’, the run has been successful! To exit the container, simply type ‘exit’, or stay in the container to run the actual analysis.
 
 5. **Run the actual analysis**\
@@ -49,16 +46,11 @@ As before, if you built your own image, replace 'rlporter24/dualindex-demux' wit
   The {local_path} can be to an individual file or a directory. The {CONTAINER} should be the container name, not the image name. The container name can be found by running 
   `docker container ls` to list all the current containers, or by looking at the containers in the docker decktop GUI. The {container_path} should be provided relative to the '16s-demux' directory, which is the home   directory within the container.\
 \
-  Navigate to the 16S-demux directory and if necessary, edit line 4 so that it reads:\
-  `configfile: “config/config.yaml”`\
-  rather than\
-  `configfile: “config/test_config.yaml”`\
-\
 In the ‘config’ directory, update ‘config.yaml’ so that `samplesheet:` and `fastqlist:` in lines 2 and 4 are followed by the paths to your input samplesheet and fastqlist, respectively (more details in the __Inputs__ section). If you are using custom primers or indexes, you may need to adjust the input file for ‘indicies:’ or the lengths of read1 and read2 indexes and primers (lines 3, 5, 6, 7, 8). For more details on custom primers, see the __Custom Primers__ section.\
 \
 Once the inputs and paths are updated, run:\
 `snakemake --cores 1`\
-within the 16S-demux directory. The analysis time will vary with the number and size of input files as well as the machine used. If the run is successful, a message similar to that below should be output:\
+within the 16S-demux directory (replacing 1 with the desired number of cores). The analysis time will vary with the number and size of input files as well as the machine used. If the run is successful, a message similar to that below should be output:\
 <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/snakemakeSuccessOutput.png?raw=true" alt="Alt Text" width="750" height="400">\
 \
 __Note:__ Before starting the actual run, you can use the command ‘snakemake -n’ to do a dry run. This is helpful for ensuring that names and file locations are correct before starting the full run.
@@ -81,8 +73,8 @@ Most HPC are not compatible with Docker use, but do support Singularity/Apptaine
 1. **Setting up the Singularity/Apptainer image**\
    First, ensure that Singularity/Apptainer is installed. The pre-built Singularity image is not currently available for direct download, but the Singularity image can be built locally fairly quickly ( ~10 minutes) and only requires that some specific files be made available locally. Instructions are included in the ‘Building Images’ section below. Once the build is successfully completed, you should have a file named ‘demux-image.sif’ in the directory from which it was built.
 
-### Running Interactively:
-Depending on the resources available locally, you can run the analysis in an interactive Singularity shell, rather than submitting a job to a resource manager. To do so, follow these steps:
+### Running Interactively (Not Recommended):
+Depending on the resources available locally, you can run the analysis in an interactive Singularity shell, rather than submitting a job to a resource manager. It is highly unlikely that a login node will provide sufficient resources, so check this before starting and use a compute node as needed. Running interactively is only recommended for testing inputs or troubleshooting. If you choose to run interactively follow these steps:
 
 2. **Open a shell in the container**\
    To open a shell, run the following command from the directory containing the ‘demux-image.sif’:\
@@ -91,22 +83,16 @@ Depending on the resources available locally, you can run the analysis in an int
 
 
 3. **Run the test analysis**\
-   To check that the set up was successful, run a quick analysis using provided test data. To do this, edit the Snakefile so that line 4 reads:\
-  `configfile: "config/test_config.yaml"`\
-  rather than:\
-  `configfile: "config/config.yaml"`\
-  Then run:\
-  `snakemake --cores 1`
+   To check that the set up was successful, run a quick analysis using provided test data. To do this, run:\
+  `snakemake --cores 1 -s test_Snakefile`
   within the ‘16S_demux_edits’ directory. This should take about 16 minutes depending on your system, and will run a test analysis using ‘config/test_fastq.txt’,   ‘config/test_samplesheet.txt’ and the test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated within the test_out/trimmed directory:\
      <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
+   ### ^ THIS WILL NEED TO BE UPDATED WITH NEW NAMES!\
   If the files are generated in the ‘trimmed’ directory are all present, the run has been successful.\
   To exit the container, simply type ‘exit’.
 
-4. **Run the actual analysis**\
-  To run the actual analysis, ensure your input files are accurate and located in the correct directory (see >Inputs for details), and ensure that the paths within ‘config/config.yaml’ are correct. Next edit the Snakefile so that line 4 reads:\
-  `config/config.yaml`\
-  rather than:\
-  `configfile: "config/test_config.yaml`.\
+5. **Run the actual analysis**\
+  To run the actual analysis, ensure your input files are accurate and located in the correct directory (see >Inputs for details), and ensure that the paths within ‘config/config.yaml’ are correct. 
 \
   If you aren’t using a job manager like slurm, you can use the command:\
   `snakemake --cores 1`\
@@ -120,29 +106,20 @@ __Note:__ Before starting the actual run, you can use the command `snakemake -n`
 Most HPC clusters will use a resource manager, such as Slurm. To run the analysis through a manager, complete step 1 above, and then follow the instructions in this section. The code includes draft scripts for submitting through Slurm, but these can be adapted to other systems. 
 
 2. **Run the test analysis**\
-To check that the set up was successful, run a quick analysis using provided test data. To do this, check that Snakefile line 4 reads:\
-  `configfile: "config/test_config.yaml"`\
-  rather than:\
-  `configfile: "config/config.yaml"`\
-\
-  Then create a script or edit the draft script ('submitSnakemake.sh') to submit to a job manager. The script should run the following line from the 16s-demux direcotry:\
-  `singularity exec ../demux-image.sif snakemake --cores 1`. (Replace 1 with the desired number of cores)\
+To check that the set up was successful, run a quick analysis using provided test data. To do this, edit the draft script ('submit_test_snakemake.sh') to submit to a job manager. The script should run the following line from the 16s-demux direcotry:\
+  `singularity exec ../demux-image.sif snakemake --cores 1 -s test_Snakefile`. (Replace 1 with the desired number of cores)\
 This should take around 10 minutes depending on your system, and will run a test analysis using ‘config/test_fastq.txt’, ‘config/test_samplesheet.txt’, and the test files included in /fastq_data/test/. The output files will be generated in the ‘workflow/test_out/’ directory. If the run is successful, the following outputs should be generated within the test_out/trimmed directory:\
      <img src="https://github.com/rlporter24/Amplicon-dual-index-demux/blob/main/images/testSuccessOutputs.png?raw=true" alt="Alt Text" width="400" height="1000">\
+     ### ^ THIS WILL NEED TO BE UPDATED WITH NEW NAMES!\
    \
   If the files are generated in the ‘trimmed’ directory are all present, the run has been successful.\
 
-3. **Run the actual analysis**\
-To run the actual analysis, ensure your input files are accurate and located in the correct directory (see >Inputs for details), and ensure that the paths within ‘config/config.yaml’ are correct. Next edit the Snakefile so that line 4 reads:\
-  `config/config.yaml`\
-  rather than:\
-  `configfile: "config/test_config.yaml`.\
-\
-Use a submission script as above to run the command:\
+4. **Run the actual analysis**\
+To run the actual analysis, ensure your input files are accurate and located in the correct directory (see >Inputs for details), and ensure that the paths within ‘config/config.yaml’ are correct. Next edit and use a submission script as above to run the command:\
 `singularity exec ../demux-image.sif snakemake --cores 1`. (Replace 1 with the desired number of cores)\
+A dfradt script is provided as 'submit_snakemake.sh'.\
 \
-  __Note:__ To use this submission script, be sure to change the SBATCH parameters at the top as needed, and ensure that the image name in the line:\
-`singularity shell ../demux-image.sif`\
+  __Note:__ To use this submission script, be sure to change the SBATCH parameters at the top as needed.
 
 ## Inputs
 In addition to the sequencing data itself, there are two input files needed for demultiplexing: a fastq file list, and a sample sheet. Additionally, the included config.yaml file will need to be edited.\
